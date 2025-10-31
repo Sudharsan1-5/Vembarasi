@@ -335,53 +335,95 @@ const WhyMe: React.FC = () => {
 
 
 // --- CONTACT SECTION ---
-const Contact: React.FC = () => (
-    <Section id="contact" title="Get in Touch" className="bg-light-blue">
-        <div className="max-w-3xl mx-auto text-center">
-             <p className="text-base sm:text-lg text-light-gray mb-8">
-                I am actively seeking nursing opportunities in Germany and other international healthcare settings. I am excited to discuss how my clinical expertise and dedication can contribute to your healthcare team.
-            </p>
-            <div className="grid sm:grid-cols-2 gap-6 mb-10">
-                <Card className="text-left">
-                     <h3 className="font-bold text-lg text-navy mb-2">Contact Information</h3>
-                     <p className="text-light-gray text-sm break-all">📧 vembarasik2000@gmail.com</p>
-                     <p className="text-light-gray text-sm">📞 +91 99407 11866</p>
-                     <p className="text-light-gray text-sm">📍 Trichy, Tamil Nadu, India</p>
-                </Card>
-                 <Card className="flex flex-col justify-center items-center">
-                    <h3 className="font-bold text-lg text-navy mb-3">Download My Resume</h3>
-                    <DownloadButton className="bg-teal text-white px-6 py-2 rounded-md font-bold hover:bg-navy w-48">
-                        Download CV
-                    </DownloadButton>
+const Contact: React.FC = () => {
+    const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setStatus('submitting');
+        setErrorMessage('');
+
+        try {
+            const response = await fetch('https://formspree.io/f/xeopodle', {
+                method: 'POST',
+                body: new FormData(e.target as HTMLFormElement),
+                headers: { 'Accept': 'application/json' }
+            });
+
+            if (response.ok) {
+                setStatus('success');
+                (e.target as HTMLFormElement).reset(); // Clear form on success
+            } else {
+                const data = await response.json();
+                if (data.errors) {
+                    setErrorMessage(data.errors.map((error: any) => error.message).join(', '));
+                } else {
+                    setErrorMessage('Oops! Something went wrong. Please try again.');
+                }
+                setStatus('error');
+            }
+        } catch (error) {
+            setErrorMessage('Network error. Please check your connection and try again.');
+            setStatus('error');
+        }
+    };
+
+
+    return (
+        <Section id="contact" title="Get in Touch" className="bg-light-blue">
+            <div className="max-w-3xl mx-auto text-center">
+                 <p className="text-base sm:text-lg text-light-gray mb-8">
+                    I am actively seeking nursing opportunities in Germany and other international healthcare settings. I am excited to discuss how my clinical expertise and dedication can contribute to your healthcare team.
+                </p>
+                <div className="grid sm:grid-cols-2 gap-6 mb-10">
+                    <Card className="text-left">
+                         <h3 className="font-bold text-lg text-navy mb-2">Contact Information</h3>
+                         <p className="text-light-gray text-sm break-all">📧 vembarasi18@gmail.com</p>
+                         <p className="text-light-gray text-sm">📞 +91 9600940871</p>
+                         <p className="text-light-gray text-sm">📍 Trichy, Tamil Nadu, India</p>
+                    </Card>
+                     <Card className="flex flex-col justify-center items-center">
+                        <h3 className="font-bold text-lg text-navy mb-3">Download My Resume</h3>
+                        <DownloadButton className="bg-teal text-white px-6 py-2 rounded-md font-bold hover:bg-navy w-48">
+                            Download CV
+                        </DownloadButton>
+                    </Card>
+                </div>
+                <Card>
+                     <h3 className="font-bold text-xl text-navy mb-6 text-center">Send me a message</h3>
+                    <form onSubmit={handleSubmit} className="space-y-4 text-left">
+                        <div className="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label htmlFor="name" className="block text-navy font-semibold mb-1">Name</label>
+                                <input type="text" name="name" id="name" required placeholder="Your Name" className="w-full p-2.5 bg-white border border-gray-300 rounded-md focus:ring-2 focus:ring-teal focus:border-teal placeholder-gray-400" />
+                            </div>
+                            <div>
+                                <label htmlFor="email" className="block text-navy font-semibold mb-1">Email</label>
+                                <input type="email" name="email" id="email" required placeholder="Your Email" className="w-full p-2.5 bg-white border border-gray-300 rounded-md focus:ring-2 focus:ring-teal focus:border-teal placeholder-gray-400" />
+                            </div>
+                        </div>
+                        <div>
+                            <label htmlFor="subject" className="block text-navy font-semibold mb-1">Subject</label>
+                            <input type="text" name="subject" id="subject" required placeholder="Message Subject" className="w-full p-2.5 bg-white border border-gray-300 rounded-md focus:ring-2 focus:ring-teal focus:border-teal placeholder-gray-400" />
+                        </div>
+                        <div>
+                            <label htmlFor="message" className="block text-navy font-semibold mb-1">Message</label>
+                            <textarea id="message" name="message" required rows={4} placeholder="Your Message" className="w-full p-2.5 bg-white border border-gray-300 rounded-md focus:ring-2 focus:ring-teal focus:border-teal placeholder-gray-400"></textarea>
+                        </div>
+                        
+                        {status === 'success' && <p className="text-center font-semibold text-accent-green">Thank you! Your message has been sent successfully.</p>}
+                        {status === 'error' && <p className="text-center font-semibold text-red-500">{errorMessage}</p>}
+
+                        <button type="submit" disabled={status === 'submitting'} className="w-full bg-teal text-white p-3 rounded-md font-bold text-lg hover:bg-navy transition-colors disabled:bg-light-gray disabled:cursor-wait">
+                            {status === 'submitting' ? 'Sending...' : 'Send Message'}
+                        </button>
+                    </form>
                 </Card>
             </div>
-            <Card>
-                 <h3 className="font-bold text-xl text-navy mb-4 text-center">Send me a message</h3>
-                <form className="space-y-4 text-left">
-                    <div className="grid sm:grid-cols-2 gap-4">
-                        <div>
-                            <label htmlFor="name" className="block text-navy font-semibold mb-1">Name</label>
-                            <input type="text" id="name" className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal" />
-                        </div>
-                        <div>
-                            <label htmlFor="email" className="block text-navy font-semibold mb-1">Email</label>
-                            <input type="email" id="email" className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal" />
-                        </div>
-                    </div>
-                    <div>
-                        <label htmlFor="subject" className="block text-navy font-semibold mb-1">Subject</label>
-                        <input type="text" id="subject" className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal" />
-                    </div>
-                    <div>
-                        <label htmlFor="message" className="block text-navy font-semibold mb-1">Message</label>
-                        <textarea id="message" rows={4} className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal"></textarea>
-                    </div>
-                    <button type="submit" className="w-full bg-teal text-white p-3 rounded-md font-bold text-lg hover:bg-navy transition-colors">Send Message</button>
-                </form>
-            </Card>
-        </div>
-    </Section>
-);
+        </Section>
+    );
+};
 
 // --- FOOTER SECTION ---
 const Footer: React.FC = () => (
@@ -389,7 +431,7 @@ const Footer: React.FC = () => (
         <div className="max-w-7xl mx-auto text-center">
             <p className="font-serif text-xl mb-2">Vembarasi K - Registered Nurse & Midwife</p>
             <p className="text-sm text-gray-400 mb-4">© {new Date().getFullYear()} All Rights Reserved | Available for International Positions</p>
-            <p className="text-sm text-gray-300">Contact: vembarasik2000@gmail.com | +91 99407 11866</p>
+            <p className="text-sm text-gray-300">Contact: vembarasi18@gmail.com | +91 9600940871</p>
         </div>
     </footer>
 );
