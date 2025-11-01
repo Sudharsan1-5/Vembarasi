@@ -89,7 +89,7 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ className, children }) 
 
     return (
         <a 
-            href="/Vembarasi/Vembarasi_K-resume.pdf" 
+            href="/Vembarasi_K-resume.pdf" 
             download 
             onClick={handleClick}
             className={`${className} flex items-center justify-center transition-all duration-300 ${status === 'success' ? 'bg-accent-green' : ''}`}
@@ -156,7 +156,7 @@ const Header: React.FC = () => {
 const Hero: React.FC = () => (
     <section id="home" className="bg-light-blue min-h-screen flex items-center justify-center pt-24 pb-12">
         <div className="text-center max-w-4xl mx-auto px-4 sm:px-6">
-            <img src="/Vembarasi/Vembarasi-profile-image.jpg" alt="Vembarasi K" className="w-36 h-36 md:w-48 md:h-48 rounded-full mx-auto mb-6 border-4 border-white shadow-2xl object-cover" />
+            <img src="/Vembarasi-profile-image.jpg" alt="Vembarasi K" className="w-36 h-36 md:w-48 md:h-48 rounded-full mx-auto mb-6 border-4 border-white shadow-2xl object-cover" />
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-navy leading-tight">
                 Licensed Registered Nurse & Midwife
             </h1>
