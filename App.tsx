@@ -345,7 +345,7 @@ const Contact: React.FC = () => {
         setErrorMessage('');
 
         try {
-            const response = await fetch('https://formspree.io/f/xeopodle', {
+            const response = await fetch('https://formspree.io/f/mrbovvbn', {
                 method: 'POST',
                 body: new FormData(e.target as HTMLFormElement),
                 headers: { 'Accept': 'application/json' }
